@@ -1,14 +1,14 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\URL;
 use Illuminate\Http\Request;
 
 class DealsController extends Controller
 {
     public function index(Request $request)
     {
-        $strJsonFileContents = file_get_contents("\laragon\www\code\mi-proyecto-laravel\app\Http\Controllers\deals.json", true);  //obtiene el documento
+        $strJsonFileContents = file_get_contents( URL::asset('deals.json'), true);  //obtiene el documento
         $array = json_decode($strJsonFileContents, FILE_USE_INCLUDE_PATH);  //lo convierte en array
 
         // los 2 tipos de retorno
