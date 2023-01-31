@@ -8,7 +8,7 @@ class DealsController extends Controller
 {
     public function index(Request $request)
     {
-        $strJsonFileContents = file_get_contents( URL::asset('deals.json'), true);  //obtiene el documento
+        $strJsonFileContents = file_get_contents( storage_path()."\deals.json", true);  //obtiene el documento
         $array = json_decode($strJsonFileContents, FILE_USE_INCLUDE_PATH);  //lo convierte en array
 
         // los 2 tipos de retorno
