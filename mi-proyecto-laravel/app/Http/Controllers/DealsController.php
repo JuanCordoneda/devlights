@@ -1,20 +1,20 @@
 <?php
 
 namespace App\Http\Controllers;
+
+use App\Models\Deals;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Http\Request;
 
 class DealsController extends Controller
 {
-    public function index(Request $request)
+    private $array;
+
+
+    //función que crea la variable de clase $array con todos los datos del json
+    public function returnArray()
     {
-        $strJsonFileContents = file_get_contents( storage_path()."\deals.json", true);  //obtiene el documento
-        $array = json_decode($strJsonFileContents, FILE_USE_INCLUDE_PATH);  //lo convierte en array
-
-        // los 2 tipos de retorno
-        $array2 = [];       
-        $answer = [];
-
+        $array = json_decode(file_get_contents(storage_path() . "\deals.json", true), FILE_USE_INCLUDE_PATH);
         for ($x = 0; $x < count($array); $x++) {    //array para aplicar filtros
             $array2[] = array(
                 'title' => $array[$x]['title'],
@@ -25,8 +25,18 @@ class DealsController extends Controller
                 'salePrice' => (float)$array[$x]['salePrice'],
             );
         }
+        $this->array=$array2;
+    }
 
-        if ($request->q) {
+
+    public function index(Request $request)
+    {
+        // los 2 tipos de retorno
+        $array2 = $this->array;
+        $answer = [];
+
+
+        if ($request->q) {  //si existe el request...
             $req = explode(",", $request->q); //separa las distintas querys del request en un array 
 
             for ($x = 0; $x < count($array2); $x++) {
@@ -47,9 +57,7 @@ class DealsController extends Controller
                     //si NO existe parámetro 'title:' y hay coincidencia o similitud de búsqueda, se agrega en el array $answer
                     elseif (strpos(strtolower($title), strtolower($req[$i])) > -1 || strtolower($title) == strtolower($req[$i])) {
                         $answer[] = $array2[$x];
-                    } 
-                    
-                    else {
+                    } else {
                         continue;
                     }
                 }
@@ -63,8 +71,8 @@ class DealsController extends Controller
                     $num = sizeof($array2);  //longitud fija de array
                     sort($array2);  //ordena array
 
-                    //si existe parámetro 'salePrice>' y hay similitud de búsqueda, se quitan los campso del array (array2[]) que no son compatibles
-                    if ((strpos($req[$w], 'salePrice>') > -1)) { 
+                    //si existe parámetro 'salePrice>' y hay similitud de búsqueda, se quitan los registros del array original (array2[]) que no son compatibles
+                    if ((strpos($req[$w], 'salePrice>') > -1)) {
                         for ($a = 0; $a < $num; $a++) {                                 //iterador de array2[]
                             if ($array2[$a]['salePrice'] < substr($req[$w], 10)) {
                                 unset($array2[$a]);                                     //se quitan campos incompatibles
@@ -72,8 +80,8 @@ class DealsController extends Controller
                         }
                     }
 
-                    //si existe parámetro 'salePrice<' y hay similitud de búsqueda, se quitan los campso del array (array2[]) que no son compatibles
-                     elseif ((strpos($req[$w], 'salePrice<') > -1)) { //si es salePrice<
+                    //si existe parámetro 'salePrice<' y hay similitud de búsqueda, se quitan los registros del array original (array2[]) que no son compatibles
+                    elseif ((strpos($req[$w], 'salePrice<') > -1)) { //si es salePrice<
                         for ($b = 0; $b < $num; $b++) {                                 //iterador de array2[]
                             if ($array2[$b]['salePrice'] > substr($req[$w], 10)) {
                                 unset($array2[$b]);                                     //se quitan campos incompatibles
@@ -88,8 +96,8 @@ class DealsController extends Controller
                     'games' => json_decode(json_encode($array2))
                 ]);
 
-            // si se aplicaron filtros de búsqueda por título...
-            } else {    
+                // si se aplicaron filtros de búsqueda por título...
+            } else {
                 $req = explode(",", $request->q); //separa las distintas querys del request
 
                 for ($z = 0; $z < count($req); $z++) {    //recorre parametros de query
@@ -97,14 +105,14 @@ class DealsController extends Controller
                     sort($answer);
 
                     //si existe parámetro 'salePrice>' y hay similitud de búsqueda, se quitan los campso del array (array2[]) que no son compatibles
-                    if ((strpos($req[$z], 'salePrice>') > -1)) { 
+                    if ((strpos($req[$z], 'salePrice>') > -1)) {
                         for ($c = 0; $c < $num; $c++) {
                             if ($answer[$c]['salePrice'] < substr($req[$z], 10)) {
                                 unset($answer[$c]);
                             }
                         }
-                    
-                    //si existe parámetro 'salePrice<' y hay similitud de búsqueda, se quitan los campos del array (array2[]) que no son compatibles
+
+                        //si existe parámetro 'salePrice<' y hay similitud de búsqueda, se quitan los campos del array (array2[]) que no son compatibles
                     } elseif ((strpos($req[$z], 'salePrice<') > -1)) { //si es salePrice<
                         for ($d = 0; $d < $num; $d++) {
                             if ($answer[$d]['salePrice'] > substr($req[$z], 10)) {
