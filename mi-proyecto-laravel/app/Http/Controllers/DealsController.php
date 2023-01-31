@@ -34,24 +34,24 @@ class DealsController extends Controller
         $answer = [];
 
         if ($request->q) {  //si existe el request...
-            $req = explode(",", $request->q); //separa las distintas querys del request en un 
+            $req = explode(",", $request->q); //separa las distintas querys del request en un array
 
             for ($x = 0; $x < count($array); $x++) {
                 $title = $array[$x]['title'];
 
                 for ($i = 0; $i < count($req); $i++) {    //itera de parámetros de query
 
-                    //si existe parámetro 'title:' y hay coincidencia o similitud de búsqueda, se agrega en el $answer
+                    //si existe parámetro 'title:' y hay coincidencia o similitud de búsqueda, se agrega en el array $answer
                     if (strpos($req[$i], 'title:') > -1 && (strpos(strtolower($title), strtolower(substr($req[$i], 6))) > -1) || strtolower($title) == strtolower(substr($req[$i], 6))) {
                         $answer[] = $array[$x];
                     }
 
-                    //si existe parámetro 'title=' y hay similitud de búsqueda, se agrega en el $answer
+                    //si existe parámetro 'title=' y hay similitud de búsqueda, se agrega en el array $answer
                     elseif (strpos($req[$i], 'title=') > -1 && $title == substr($req[$i], 6)) {
                         $answer[] = $array[$x];
                     }
 
-                    //si NO existe parámetro 'title:' y hay coincidencia o similitud de búsqueda, se agrega en el $answer
+                    //si NO existe parámetro 'title:' y hay coincidencia o similitud de búsqueda, se agrega en el array $answer
                     elseif (strpos(strtolower($title), strtolower($req[$i])) > -1 || strtolower($title) == strtolower($req[$i])) {
                         $answer[] = $array[$x];
                     } else {
