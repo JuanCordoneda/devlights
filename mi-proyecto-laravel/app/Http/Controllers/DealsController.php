@@ -24,13 +24,13 @@ class DealsController extends Controller
                 'salePrice' => (float)$array[$x]['salePrice'],
             );
         }
-        $this->array=$array2;
+        $this->array = $array2;
     }
 
     public function index(Request $request)
     {
         // los 2 tipos de retorno
-        $array= $this->array;
+        $array = $this->array;
         $answer = [];
 
         if ($request->q) {  //si existe el request...
@@ -90,7 +90,8 @@ class DealsController extends Controller
                 }
                 // return $array;  
                 return view('welcome', [
-                    'games' => json_decode(json_encode($array))
+                    'games' => json_decode(json_encode($array)),
+                    'search' => $request->q
                 ]);
 
                 // si se aplicaron filtros de búsqueda por título...
@@ -122,12 +123,14 @@ class DealsController extends Controller
                 }
                 // return $answer;
                 return view('welcome', [
-                    'games' => json_decode(json_encode($answer))
+                    'games' => json_decode(json_encode($answer)),
+                    'search' => $request->q
                 ]);
             }
         } else {
             return view('welcome', [
-                'games' => json_decode(json_encode($array))
+                'games' => json_decode(json_encode($array)),
+                'search' => 'Buscar...'
             ]);
         }
     }

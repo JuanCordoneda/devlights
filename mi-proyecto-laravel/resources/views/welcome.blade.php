@@ -45,7 +45,7 @@
     </div>
     <section class="webdesigntuts-workshop bg-dark">
         <form action="" method="GET">
-            <input type="search" name="q" placeholder="Buscar...">
+            <input type="search" name="q" placeholder="{{ $search }}">
             <button>Buscar</button>
         </form>
     </section>
