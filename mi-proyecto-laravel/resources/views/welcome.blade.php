@@ -18,7 +18,7 @@
 
 </head>
 
-<body>
+<body class="bg-dark">
     <!-- Navigation-->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container px-4 px-lg-5" style="margin: 5px auto 20; ">
@@ -45,7 +45,7 @@
     </div>
     <section class="webdesigntuts-workshop bg-dark">
         <form action="" method="GET">
-            <input type="search" name="q" placeholder="{{ $search }}">
+            <input type="search" name="q" placeholder="{{ $search }}">{{ $search }}</input>
             <button>Buscar</button>
         </form>
     </section>
@@ -126,7 +126,6 @@
     <!-- Footer-->
     <footer class="py-5 bg-dark">
         <div class="container">
-            <p class="m-0 text-center text-white">Copyright &copy; Your Website 2022</p>
         </div>
     </footer>
     <!-- Bootstrap core JS-->
